@@ -8,23 +8,41 @@ GOALS
 INSTALL
 =======
 sudo gem install rss-client
+script/plugin install git://github.com/grosser/acts_as_feed.git
 
-A Model with (see: MIGRATION):
-  feed_url : string
-  feed_updated_at : timestamp
-  feed_data : text
+Table with (see: MIGRATION):
 
-MyFeed < ActiveRecord::Base
-  acts_as_feed
-end
+    feed_url : string
+    feed_updated_at : timestamp
+    feed_data : text
 
+Simple Model addition:
+
+    MyFeed < ActiveRecord::Base
+      acts_as_feed
+    end
+    
+Polymorphic odel:
+
+  class Feed < ActiveRecord::Base
+    acts_as_feed
+    
+    belongs_to :covered, :polymorphic => true
+    validates_presence_of :covered_id
+    
+    validates_length_of :feed_url, :in=>10..250
+    attr_accessible :feed_url, :covered
+    
+    after_save :update_feed
+  end
  
 USAGE
 =====
+ - call update feed if the feed could be out of date, if it is not, noting will be done
  - MyFeed.create!(:feed_url="xxx.com/rss").update_feed
  
  
 AUTHOR
 ======
 Michael Grosser
-michael dot grosser ät gmail dot com
+grosser dot ichael ät gmail dot com
