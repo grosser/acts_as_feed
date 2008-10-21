@@ -18,23 +18,23 @@ Table with (see: MIGRATION):
 
 Simple Model addition:
 
-    MyFeed < ActiveRecord::Base
+    User < ActiveRecord::Base
       acts_as_feed
     end
     
-Polymorphic odel:
+Polymorphic Model:
 
-  class Feed < ActiveRecord::Base
-    acts_as_feed
-    
-    belongs_to :covered, :polymorphic => true
-    validates_presence_of :covered_id
-    
-    validates_length_of :feed_url, :in=>10..250
-    attr_accessible :feed_url, :covered
-    
-    after_save :update_feed
-  end
+    class Feed < ActiveRecord::Base
+      acts_as_feed
+      
+      belongs_to :covered, :polymorphic => true
+      validates_presence_of :covered_id
+      
+      validates_length_of :feed_url, :in=>10..250
+      attr_accessible :feed_url, :covered
+      
+      after_save :update_feed
+    end
  
 USAGE
 =====
@@ -45,4 +45,4 @@ USAGE
 AUTHOR
 ======
 Michael Grosser
-grosser dot ichael ät gmail dot com
+grosser dot michael ät gmail dot com
