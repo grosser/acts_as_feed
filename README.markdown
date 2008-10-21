@@ -48,5 +48,5 @@ USAGE
  
 AUTHOR
 ======
-Michael Grosser
-grosser dot michael ät gmail dot com
+  Michael Grosser  
+  grosser dot michael ät gmail dot com  
