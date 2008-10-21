@@ -4,6 +4,8 @@ GOALS
  - update feed if feed is old (last feed update > 15 minutes)
  - update feed if url has changed 
  - support http://url and url
+ - full C1 coverage
+
 
 INSTALL
 =======
@@ -35,12 +37,14 @@ Polymorphic Model:
       
       after_save :update_feed
     end
+
  
 USAGE
 =====
- - call update feed if the feed could be out of date, if it is not, noting will be done
- - MyFeed.create!(:feed_url="xxx.com/rss").update_feed
+ - call `update_feed` if the feed could be out of date, if it is not, noting will be done
+ - `MyFeed.create!(:feed_url="xxx.com/rss").update_feed`
  
+
  
 AUTHOR
 ======
