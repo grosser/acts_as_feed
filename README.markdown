@@ -4,7 +4,7 @@ GOALS
  - update feed if feed is old (last feed update > 15 minutes)
  - update feed if url has changed 
  - support http://url and url
- - full C1 coverage
+ - full test coverage
 
 
 INSTALL
