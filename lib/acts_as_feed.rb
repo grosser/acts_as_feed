@@ -37,8 +37,8 @@ module ActsAsFeed
   end
   
   module InstanceMethods
-    def update_feed
-      return false unless feed_needs_update?
+    def update_feed(force=false)
+      return false if not force and not feed_needs_update?
       return false if feed_url.blank?
       return false unless data = fetch_feed(feed_url)
       self.feed_data = YAML.dump(parse_feed_data(data))
@@ -65,7 +65,12 @@ module ActsAsFeed
     end
     
     def parse_feed_entry(entry)
-      {:title=>entry.title,:url=>entry.urls[0],:description=>entry.description.to_s[0...MAX_FEED_ENTRY_DESCRIPTION_LENGTH]}
+      {
+      :title=>entry.title,
+      :published_at=>entry.date_published,
+      :url=>entry.urls[0],
+      :description=>strip_tags(entry.content.to_s)[0...MAX_FEED_ENTRY_DESCRIPTION_LENGTH]
+      }
     end
 
     def fetch_feed(url)
@@ -80,6 +85,10 @@ module ActsAsFeed
       return true if not feed_updated_at
       return true if feed_updated_at < 15.minutes.ago
       false
+    end
+    
+    def strip_tags(text)
+      ActionController::Base.helpers.strip_tags(text)
     end
   end
 end

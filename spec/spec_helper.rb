@@ -3,6 +3,11 @@ $KCODE = 'u' #activate regex unicode
 require 'rubygems'
 require 'spec'
 require 'mocha'
+
+#strip_tags
+require 'actionpack'
+require 'action_controller'
+
 $LOAD_PATH << File.expand_path("../lib", File.dirname(__FILE__))
 
 

@@ -84,17 +84,24 @@ describe :update_feed do
     before do
       @feed.expects(:fetch_feed).returns "data1"
       @feed.expects(:parse_feed_data).with("data1").returns "data"
-      @feed.update_feed.should be_true
     end
     
     it "stored the feed data as yaml" do
+      @feed.update_feed.should be_true
       @feed.reload.feed_data.should == "--- data\n"
     end
     
     it "updates the feed_updated_at" do
+      @feed.update_feed.should be_true
       @feed.reload.feed_updated_at.to_i.should == Time.now.to_i
     end
+    
+    it "forces an update" do
+      @feed.feed_updated_at = Time.now
+      @feed.update_feed(true).should be_true
+    end
   end
+  
 end
 
 
@@ -162,12 +169,8 @@ end
 
 describe :parse_feed_data do
   def parsed
-    data = stub(:channel=>stub(:title=>'the title',:description=>'the description'),:entries=>[stub(:title=>'entry 1',:urls=>['url 1'],:description=>"descr"*100)])
-    @feed.send(:parse_feed_data,data)
-  end
-  
-  before do
-    @feed = Feed.new
+    data = stub(:channel=>stub(:title=>'the title',:description=>'the description'),:entries=>[stub(:title=>'entry 1',:urls=>['url 1'],:content=>"descr"*100,:date_published=>Time.now)])
+    Feed.new.send(:parse_feed_data,data)
   end
   
   it "reads the title" do
@@ -178,15 +181,36 @@ describe :parse_feed_data do
     parsed[:description].should == 'the description'
   end
   
+  it "reads entries" do
+    Feed.any_instance.expects(:parse_feed_entry).returns 'xxx'
+    parsed[:entries].should == ['xxx']
+  end
+end
+
+
+describe :parse_feed_entry do
+  def parsed
+    entry = stub(:title=>'entry 1',:urls=>['url 1'],:content=>"descr<a>xx</a>"*100,:date_published=>Time.now)
+    Feed.new.send(:parse_feed_entry,entry)
+  end
+  
+  it "reads the entries date_published" do
+    parsed[:published_at].class.should == Time 
+  end
+  
   it "reads the entries title" do
-    parsed[:entries][0][:title].should == 'entry 1'
+    parsed[:title].should == 'entry 1'
   end
   
   it "reads the entries url" do
-    parsed[:entries][0][:url].should == 'url 1'
+    parsed[:url].should == 'url 1'
+  end
+  
+  it "removes tags from description" do
+    parsed[:description].should_not =~ /[<>]/
   end
   
   it "reads the description" do
-    parsed[:entries][0][:description].length.should == 200
-  end
+    parsed[:description].length.should == 200
+  end  
 end
