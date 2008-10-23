@@ -1,10 +1,10 @@
 GOALS
 =====
- - provide easy feed reading for ActiveRecord Models
- - update feed if feed is old (last feed update > 15 minutes)
- - update feed if url has changed 
- - support http://url and url
- - full test coverage
+ - Provide easy feed reading for ActiveRecord Models
+ - Update feed if feed is old (last feed update > 15 minutes)
+ - Update feed if url has changed 
+ - Support http://url and url
+ - Full test coverage
 
 
 INSTALL
@@ -27,7 +27,7 @@ Simple Model addition:
 Polymorphic Model:
 
     class Feed < ActiveRecord::Base
-      acts_as_feed
+      acts_as_feed :timeout=>3 #seconds
       
       belongs_to :covered, :polymorphic => true
       validates_presence_of :covered_id
@@ -41,9 +41,14 @@ Polymorphic Model:
  
 USAGE
 =====
- - call `update_feed` if the feed could be out of date, if it is not, noting will be done
+ - Call `update_feed` if the feed could be out of date. If it is not, noting will be done.
  - `MyFeed.create!(:feed_url="xxx.com/rss").update_feed`
  
+
+TODO
+====
+ - Protect against large files (eclipse download)
+ - Protect against unresponsive urls (www.fylmz.com) 
 
  
 AUTHOR

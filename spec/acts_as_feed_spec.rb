@@ -1,10 +1,8 @@
 require File.expand_path("spec_helper", File.dirname(__FILE__))
-TEST_FEED = 'rubyforge.org/export/rss_sfnews.php' 
+TEST_FEED = 'rubyforge.org/export/rss_sfnews.php'
+
 
 describe "parsing a feed" do
-  def data
-  end
-  
   before :all do
     @feed = Feed.new(:feed_url=>TEST_FEED)
     @feed.update_feed
@@ -26,6 +24,27 @@ describe "parsing a feed" do
       @data[:entries][i][:title].should_not be_blank
       @data[:entries][i][:url].should_not be_blank
     end
+  end
+end
+
+
+describe "obeying timeout" do
+  before :all do
+    class DeadFeed < ActiveRecord::Base
+      set_table_name :feeds
+      acts_as_feed :timeout => 0.00001
+    end
+  end
+    
+  it "cannot fetch if timeout is too small" do
+    @feed = DeadFeed.new(:feed_url=>TEST_FEED)
+    t1 = Time.now
+    @feed.update_feed
+    (Time.now - t1).should < 0.1
+  end
+  
+  it "does not overwrite timeouts" do
+    Feed.feed_timeout.should_not == DeadFeed.feed_timeout
   end
 end
 
@@ -127,13 +146,15 @@ end
 
 
 describe :fetch_feed do
+  before do
+    ActsAsFeed::FeedClient.any_instance.expects(:fetch).with('http://hello',Feed.feed_timeout).returns "data"
+  end
+  
   it "calls FeedClient.fetch" do
-    ActsAsFeed::FeedClient.any_instance.expects(:fetch).with('http://hello').returns "data"
     Feed.new.send(:fetch_feed,'http://hello').should == "data"
   end
   
   it "it adds http:// if necessary" do
-    ActsAsFeed::FeedClient.any_instance.expects(:fetch).with('http://hello').returns "data"
     Feed.new.send(:fetch_feed,'hello')
   end
 end

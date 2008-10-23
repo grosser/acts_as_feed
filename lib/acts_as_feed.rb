@@ -2,6 +2,7 @@ require 'rss-client'
 
 module ActsAsFeed
   MAX_FEED_ENTRY_DESCRIPTION_LENGTH = 200
+  MAX_ENTRIES = 10
   
   def self.included(base) #:nodoc:
     base.extend ClassMethods
@@ -10,10 +11,10 @@ module ActsAsFeed
   class FeedClient
     include RSSClient
     
-    def fetch(url)
+    def fetch(url,timeout)
       opts = OpenStruct.new
       opts.forceUpdate = false # set true to force the download (no 304 code handling)
-      opts.giveup = 10         # on error giveup after 10 sec timeout
+      opts.giveup = timeout    # on error giveup after X sec timeout
 
       rss = get_feed(url,opts)
       return nil unless @rssc_raw             # download error
@@ -24,9 +25,14 @@ module ActsAsFeed
   end
   
   module ClassMethods
-    def acts_as_feed
+    attr_accessor :feed_timeout
+    
+    # Options
+    # :timeout -> for http requests (in seconds) 
+    def acts_as_feed(options={})
       return if self.included_modules.include?(ActsAsFeed::InstanceMethods)
       include ActsAsFeed::InstanceMethods
+      self.feed_timeout = options[:timeout] || 5 
     end
   end
   
@@ -54,7 +60,7 @@ module ActsAsFeed
       parsed[:description] = data.channel.description.to_s
       parsed[:entries] = data.entries.map do |entry|
         parse_feed_entry(entry)
-      end
+      end[0...MAX_ENTRIES]
       parsed
     end
     
@@ -63,7 +69,7 @@ module ActsAsFeed
     end
 
     def fetch_feed(url)
-      FeedClient.new.fetch(sane_feed_url(url))
+      FeedClient.new.fetch(sane_feed_url(url),self.class.feed_timeout)
     end
       
     def sane_feed_url(url)
