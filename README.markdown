@@ -9,8 +9,9 @@ GOALS
 
 INSTALL
 =======
-sudo gem install rss-client
-script/plugin install git://github.com/grosser/acts_as_feed.git
+
+    sudo gem install rss-client
+    script/plugin install git://github.com/grosser/acts_as_feed.git
 
 Table with (see: MIGRATION):
 
