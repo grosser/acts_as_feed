@@ -48,7 +48,6 @@ USAGE
 
 TODO
 ====
- - Protect against large files (eclipse download)
  - Protect against unresponsive urls (www.fylmz.com) 
 
  
