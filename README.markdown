@@ -39,12 +39,23 @@ Polymorphic Model:
       after_save :update_feed
     end
 
- 
+
 USAGE
 =====
  - Call `update_feed` if the feed could be out of date. If it is not, noting will be done.
  - `MyFeed.create!(:feed_url="xxx.com/rss").update_feed`
- 
+
+
+DATA USAGE
+==========
+feed_data is a yaml encoded hash with :title=>'Feed title', :description=>'Feed description', :entries=>[{:title=>xxx,:url=>xxx,:description=>xxx,:published_at=>Time}]
+all of these attributes can be blank/nil depending on the feed that was parsed.
+
+    data = YAML.load(feed.feed_data)
+    feed_title = data[:title]
+    feed_descr = data[:descriptions]
+    first_entry_title = data[:entries][:title]
+
 
 TODO
 ====

@@ -1,5 +1,4 @@
 # ---- requirements
-$KCODE = 'u' #activate regex unicode
 require 'rubygems'
 require 'spec'
 require 'mocha'
@@ -33,10 +32,6 @@ end
 
 # ---- load active record
 #gem 'activerecord', '2.0.2'
-if ENV["AR"]
-  gem 'activerecord', ENV["AR"]
-  $stderr.puts("Using ActiveRecord #{ENV["AR"]}")
-end
 require 'active_record'
 
 
@@ -44,7 +39,6 @@ RAILS_ENV = "test"
 ActiveRecord::Base.configurations = {"test" => {
   :adapter => "sqlite3",
   :database => ":memory:",
-  :estraier => {:host=> "localhost", :node=>"aas_e_test", :user=>"admin", :password=>"admin"}
 }.with_indifferent_access}
 
 ActiveRecord::Base.logger = Logger.new(File.directory?("log") ? "log/#{RAILS_ENV}.log" : "/dev/null")
