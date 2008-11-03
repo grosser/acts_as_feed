@@ -48,7 +48,10 @@ USAGE
 
 DATA USAGE
 ==========
-feed_data is a yaml encoded hash with :title=>'Feed title', :description=>'Feed description', :entries=>[{:title=>xxx,:url=>xxx,:description=>xxx,:published_at=>Time}]
+feed_data is a yaml encoded hash with 
+
+    :title=>'Feed title', :description=>'Feed description', :entries=>[{:title=>xxx,:url=>xxx,:description=>xxx,:published_at=>Time}]
+
 all of these attributes can be blank/nil depending on the feed that was parsed.
 
     data = YAML.load(feed.feed_data)
