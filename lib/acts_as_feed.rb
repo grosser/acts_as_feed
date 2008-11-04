@@ -1,6 +1,7 @@
 require 'rss-client'
 
 module ActsAsFeed
+  MAX_FEED_DESCRIPTION_LENGTH = 200
   MAX_FEED_ENTRY_DESCRIPTION_LENGTH = 200
   MAX_ENTRIES = 10
   
@@ -41,7 +42,7 @@ module ActsAsFeed
       return false if not force and not feed_needs_update?
       return false if feed_url.blank?
       return false unless data = fetch_feed(feed_url)
-      self.feed_data = YAML.dump(parse_feed_data(data))
+      self.feed_data = parse_feed_data(data).to_yaml
       self.feed_updated_at = Time.now
       save
     end
@@ -56,8 +57,8 @@ module ActsAsFeed
   
     def parse_feed_data(data)
       parsed = {}
-      parsed[:title] = data.channel.title.to_s
-      parsed[:description] = data.channel.description.to_s
+      parsed[:title] = clean_string(data.channel.title)
+      parsed[:description] = clean_string(data.channel.description)[0...MAX_FEED_DESCRIPTION_LENGTH]
       parsed[:entries] = data.entries.map do |entry|
         parse_feed_entry(entry)
       end[0...MAX_ENTRIES]
@@ -66,10 +67,10 @@ module ActsAsFeed
     
     def parse_feed_entry(entry)
       {
-      :title=>entry.title,
+      :title=>clean_string(entry.title),
       :published_at=>entry.date_published,
       :url=>entry.urls[0],
-      :description=>strip_tags(entry.content.to_s)[0...MAX_FEED_ENTRY_DESCRIPTION_LENGTH]
+      :description=>clean_string(entry.content)[0...MAX_FEED_ENTRY_DESCRIPTION_LENGTH]
       }
     end
 
@@ -86,7 +87,11 @@ module ActsAsFeed
       return true if feed_updated_at < 15.minutes.ago
       false
     end
-    
+
+    def clean_string(text)
+      strip_tags(text.to_s).strip.gsub(%r[\n|\t],' ').squeeze(" ")
+    end
+
     def strip_tags(text)
       ActionController::Base.helpers.strip_tags(text)
     end

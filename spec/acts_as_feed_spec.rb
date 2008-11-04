@@ -214,3 +214,26 @@ describe :parse_feed_entry do
     parsed[:description].length.should == 200
   end  
 end
+
+
+describe :clean_string do
+  def clean(text)
+    Feed.new.send(:clean_string,text)
+  end
+
+  it "removes tags" do
+    clean("<p>aaa</p>").should == "aaa"
+  end
+
+  it "removes trailing whitespace" do
+    clean(" a ").should == 'a'
+  end
+
+  it "removes duplicate space" do
+    clean("a  a").should == 'a a'
+  end
+
+  it "removes duplicate whitespace" do
+    clean("a\t\n\t\n  a").should == 'a a'
+  end
+end
