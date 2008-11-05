@@ -1,9 +1,12 @@
 GOALS
 =====
  - Provide easy feed reading for ActiveRecord Models
+ - Transparently support RSS and Atom
  - Update feed if feed is old (last feed update > 15 minutes)
- - Update feed if url has changed 
+ - Update feed if url has changed
  - Support http://url and url
+ - Protect from unresponsive sites
+ - Protect from giant files
  - Full test coverage
 
 
@@ -58,11 +61,6 @@ all of these attributes can be blank/nil depending on the feed that was parsed.
     feed_title = data[:title]
     feed_descr = data[:descriptions]
     first_entry_title = data[:entries][:title]
-
-
-TODO
-====
- - Protect against unresponsive urls (www.fylmz.com) 
 
  
 AUTHOR
