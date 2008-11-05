@@ -60,7 +60,7 @@ all of these attributes can be blank/nil depending on the feed that was parsed.
     data = YAML.load(feed.feed_data)
     feed_title = data[:title]
     feed_descr = data[:descriptions]
-    first_entry_title = data[:entries][:title]
+    first_entry_title = data[:entries][0][:title]
 
  
 AUTHOR
