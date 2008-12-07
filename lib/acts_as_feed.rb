@@ -17,7 +17,12 @@ module ActsAsFeed
       opts.forceUpdate = false # set true to force the download (no 304 code handling)
       opts.giveup = timeout    # on error giveup after X sec timeout
 
-      rss = get_feed(url,opts)
+      begin
+        rss = get_feed(url,opts)
+      rescue NoMethodError
+        #channel could not be found (or something else..)
+        return nil
+      end
       return nil unless @rssc_raw             # download error
       return nil if @rssc_raw.status == 304   # feed not modified
       return nil unless rss                   # error in parsing
