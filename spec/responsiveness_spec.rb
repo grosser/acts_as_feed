@@ -5,8 +5,18 @@ UNPARSEABLE_FEEDS = [
   'http://dotmovfest.blogspot.com/feeds/posts/default'
 ]
 
+PARSEABLE_FEEDS = [
+  'http://www.fff.se/rss.asp',
+  'http://hiff.org/blogger/atom_feed.xml'
+]
 
-describe UNPARSEABLE_FEEDS do
+describe 'reading feeds' do
+  PARSEABLE_FEEDS.each do |feed|
+    it "can read #{feed}" do
+      Feed.new(:feed_url=>feed).update_feed.should be_true
+    end
+  end
+
   UNPARSEABLE_FEEDS.each do |wtf|
     it "does not explode on #{wtf}" do
       Feed.new(:feed_url=>wtf).update_feed

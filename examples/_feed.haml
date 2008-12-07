@@ -1,0 +1,11 @@
+-#use with feed.rb
+- if feed.filled?
+  %h2="Blog: #{feed.title}"
+  - for item in feed.entries[0...5]
+    -date = item.published_at.to_date.to_s(:long) rescue ''
+
+    %h2=link_to(h(item.title),h(item.url))
+    %br
+    =date
+    .clearer
+    =truncate(item.description,70) unless item.description.blank?
