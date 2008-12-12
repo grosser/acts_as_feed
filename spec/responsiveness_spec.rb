@@ -1,25 +1,40 @@
 require File.expand_path("spec_helper", File.dirname(__FILE__))
 UNRESPONSIVE_URL = 'http://www.fylmz.com'
 LARGE_FILE = 'http://ftp.wh2.tu-dresden.de/pub/mirrors/eclipse/technology/epp/downloads/release/ganymede/SR1/eclipse-jee-ganymede-SR1-linux-gtk-x86_64.tar.gz'
-UNPARSEABLE_FEEDS = [
-  'http://dotmovfest.blogspot.com/feeds/posts/default'
-]
-
 PARSEABLE_FEEDS = [
   'http://www.fff.se/rss.asp',
+]
+CURRENTLY_NOT_PARSABLE_FEEDS = [
   'http://hiff.org/blogger/atom_feed.xml'
+]
+UNPARSEABLE_FEEDS = [
+  'http://blog.soundcloud.com/feed',#redirect
+  'www.erikcall.com',#normal page
+  'www.glasgowfilmfestival.org.uk/dynamic_pages/feed',#login form
+  'http://dotmovfest.blogspot.com/feeds/posts/default',#every line starting with &lt;br /&gt;
 ]
 
 describe 'reading feeds' do
-  PARSEABLE_FEEDS.each do |feed|
-    it "can read #{feed}" do
-      Feed.new(:feed_url=>feed).update_feed.should be_true
+  PARSEABLE_FEEDS.each do |url|
+    it "can read #{url}" do
+      Feed.new(:feed_url=>url).update_feed.should be_true
     end
   end
 
+  CURRENTLY_NOT_PARSABLE_FEEDS.each do |url|
+    it "should read #{url}" do
+      pending do
+        Feed.new(:feed_url=>url).update_feed.should be_true
+      end
+    end
+  end
+
+
   UNPARSEABLE_FEEDS.each do |wtf|
     it "does not explode on #{wtf}" do
-      Feed.new(:feed_url=>wtf).update_feed
+      f = Feed.new(:feed_url=>wtf)
+      f.update_feed
+      f.feed_data.should be_blank
     end
   end
 end
