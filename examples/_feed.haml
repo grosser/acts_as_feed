@@ -1,4 +1,4 @@
--#use with feed.rb
+-#use with Feed that extends ActsAsFeed::Feed
 - if feed.filled?
   %h2="Blog: #{feed.title}"
   - for item in feed.entries[0...5]

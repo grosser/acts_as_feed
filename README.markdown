@@ -1,12 +1,13 @@
-GOALS
-=====
- - Provide easy feed reading for ActiveRecord Models
+Features
+========
+ - Easy feed reading for ActiveRecord Models
  - Transparently support RSS and Atom
  - Update feed if feed is old (last feed update > 15 minutes)
  - Update feed if url has changed
  - Support http://url and url
  - Protect from unresponsive sites
  - Protect from giant files
+ - Basic implementation of Feed and FeedEntry
  - Full test coverage
 
 
@@ -18,9 +19,14 @@ INSTALL
 
 Table with (see: MIGRATION):
 
+    #essential
     feed_url : string
     feed_updated_at : timestamp
     feed_data : text
+
+    #if you want to extend ActsAsFeed::Feed or use a polymorphic feed
+    covered_id : integer
+    covered_type : string
 
 Simple Model addition:
 
@@ -30,11 +36,16 @@ Simple Model addition:
     
 Polymorphic Model:
 
+    #leverage basic implementation (see lib/acts_as_feed/feed)
+    class Feed < ActsAsFeed::Feed
+      after_save :update_feed
+    end
+
+    #roll you own
     class Feed < ActiveRecord::Base
       acts_as_feed :timeout=>3 #seconds
       
       belongs_to :covered, :polymorphic => true
-      validates_presence_of :covered_id
       
       validates_length_of :feed_url, :in=>10..250
       attr_accessible :feed_url, :covered
@@ -51,16 +62,20 @@ USAGE
 
 DATA USAGE
 ==========
-feed_data is a yaml encoded hash with 
+!If you do not extend `ActsAsFeed::Feed` please read `/examples/raw_data_usage.txt`!
 
-    :title=>'Feed title', :description=>'Feed description', :entries=>[{:title=>xxx,:url=>xxx,:description=>xxx,:published_at=>Time}]
+    #HAML view example
+    - if feed.filled?
+      %h2="Blog: #{feed.title}"
+      - for item in feed.entries[0...5]
+        -date = item.published_at.to_date.to_s(:long) rescue ''#can be nil depending on parsed feed
 
-all of these attributes can be blank/nil depending on the feed that was parsed.
-
-    data = YAML.load(feed.feed_data)
-    feed_title = data[:title]
-    feed_descr = data[:descriptions]
-    first_entry_title = data[:entries][0][:title]
+        %h2=link_to(h(item.title),h(item.url))
+        %br
+        =date
+        %br
+        - unless item.description.blank?
+          =truncate(item.description,70)  #description is always cleared with strip_tags
 
  
 AUTHOR
