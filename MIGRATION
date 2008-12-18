@@ -6,7 +6,7 @@ class CreateFeeds < ActiveRecord::Migration
       t.text :feed_data
       t.timestamp :feed_updated_at
 
-      #if you want to extend ActsAsFeed::Feed or use polymorphic feed
+      #if you want to use polymorphic feed
       t.integer :covered_id
       t.string :covered_type
 

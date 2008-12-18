@@ -24,7 +24,7 @@ Table with (see: MIGRATION):
     feed_updated_at : timestamp
     feed_data : text
 
-    #if you want to extend ActsAsFeed::Feed or use a polymorphic feed
+    #if you want to extend use a polymorphic feed
     covered_id : integer
     covered_type : string
 
@@ -38,6 +38,8 @@ Polymorphic Model:
 
     #leverage basic implementation (see lib/acts_as_feed/feed)
     class Feed < ActsAsFeed::Feed
+      belongs_to :covered, :polymorphic => true
+      attr_accessible :feed_url, :covered
       after_save :update_feed
     end
 
