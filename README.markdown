@@ -79,6 +79,14 @@ DATA USAGE
         - unless item.description.blank?
           =truncate(item.description,70)  #description is always cleared with strip_tags
 
+Alternatives
+============
+If you only want to display the feeds contents to browser-using-users, try
+Googles Feed API instead.  
+[Google Feed API](http://code.google.com/apis/ajaxfeeds/)
+[Google Feed API example](http://pragmatig.wordpress.com/2009/01/28/parsing-rss-feeds-via-googles-js-feed-api/)
+
+
  
 AUTHOR
 ======
