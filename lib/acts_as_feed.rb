@@ -94,11 +94,13 @@ module ActsAsFeed
     end
 
     def clean_string(text)
-      strip_tags(text.to_s).strip.gsub(%r[\n|\t],' ').squeeze(" ")
+      strip_tags(text).strip.gsub(%r[\n|\t],' ').squeeze(" ")
     end
 
     def strip_tags(text)
-      ActionController::Base.helpers.strip_tags(text)
+      #broken in Rails 2.3 -> undefined method `id2name' for {:instance_writer=>false}:Hash
+      #therefore fallback to simple gsub
+      ActionController::Base.helpers.strip_tags(text.to_s) rescue text.to_s.gsub(/<\/?[^>]*>/, '')
     end
   end
 end
