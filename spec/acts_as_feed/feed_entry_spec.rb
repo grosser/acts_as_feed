@@ -42,7 +42,7 @@ describe ActsAsFeed::FeedEntry do
     end
 
     it "generates an integer" do
-      @entry.id.class.should == Fixnum
+      @entry.id.class.should be_a(Numeric)
     end
   end
 end
