@@ -89,8 +89,8 @@ Googles Feed API instead.
 [Google Feed API example](http://pragmatig.wordpress.com/2009/01/28/parsing-rss-feeds-via-googles-js-feed-api/)
 
 
- 
 AUTHOR
 ======
-  Michael Grosser  
-  grosser dot michael ät gmail dot com  
+[Michael Grosser](http://pragmatig.wordpress.com)  
+grosser.michael@gmail.com  
+Hereby placed under public domain, do what you want, just do not hold me accountable...

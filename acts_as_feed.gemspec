@@ -18,6 +18,8 @@ Gem::Specification.new do |s|
     "MIGRATION",
      "README.markdown",
      "Rakefile",
+     "VERSION",
+     "acts_as_feed.gemspec",
      "examples/_feed.haml",
      "examples/feed.rake",
      "examples/raw_data_usage.txt",
@@ -51,18 +53,18 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<active_record>, [">= 0"])
-      s.add_runtime_dependency(%q<action_pack>, [">= 0"])
-      s.add_runtime_dependency(%q<active_support>, [">= 0"])
+      s.add_runtime_dependency(%q<activerecord>, [">= 0"])
+      s.add_runtime_dependency(%q<actionpack>, [">= 0"])
+      s.add_runtime_dependency(%q<rss-client>, [">= 0"])
     else
-      s.add_dependency(%q<active_record>, [">= 0"])
-      s.add_dependency(%q<action_pack>, [">= 0"])
-      s.add_dependency(%q<active_support>, [">= 0"])
+      s.add_dependency(%q<activerecord>, [">= 0"])
+      s.add_dependency(%q<actionpack>, [">= 0"])
+      s.add_dependency(%q<rss-client>, [">= 0"])
     end
   else
-    s.add_dependency(%q<active_record>, [">= 0"])
-    s.add_dependency(%q<action_pack>, [">= 0"])
-    s.add_dependency(%q<active_support>, [">= 0"])
+    s.add_dependency(%q<activerecord>, [">= 0"])
+    s.add_dependency(%q<actionpack>, [">= 0"])
+    s.add_dependency(%q<rss-client>, [">= 0"])
   end
 end
 
