@@ -11,7 +11,11 @@ module ActsAsFeed
   
   class FeedClient
     include RSSClient
-    
+
+    def self.fetch(*args)
+      self.new.fetch(*args)
+    end
+
     def fetch(url,timeout)
       opts = OpenStruct.new
       opts.forceUpdate = false # set true to force the download (no 304 code handling)
@@ -80,7 +84,7 @@ module ActsAsFeed
     end
 
     def fetch_feed(url)
-      FeedClient.new.fetch(sane_feed_url(url),self.class.feed_timeout)
+      FeedClient.fetch(sane_feed_url(url),self.class.feed_timeout)
     end
       
     def sane_feed_url(url)

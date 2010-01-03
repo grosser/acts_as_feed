@@ -59,31 +59,31 @@ end
 describe :update_feed do
   before do
     @feed = Feed.new(:feed_url=>'xxx')
-    @feed.stubs(:feed_needs_update?).returns true
-    @feed.stubs(:fetch_feed).returns []
+    @feed.stub!(:feed_needs_update?).and_return true
+    @feed.stub!(:fetch_feed).and_return []
   end
   
   it "does not fetch if feed was recently fetched" do
-    @feed.expects(:feed_needs_update?).returns false
-    @feed.expects(:feed_url).never
+    @feed.should_receive(:feed_needs_update?).and_return false
+    @feed.should_receive(:feed_url).never
     @feed.update_feed.should be_false
   end
   
   it "does not fetch if feed if url is blank" do
-    @feed.expects(:feed_url).returns nil
-    @feed.expects(:fetch_feed).never
+    @feed.should_receive(:feed_url).and_return nil
+    @feed.should_receive(:fetch_feed).never
     @feed.update_feed.should be_false
   end
   
   it "does not store if feed could not be fetched" do
-    @feed.expects(:fetch_feed).returns nil
+    @feed.should_receive(:fetch_feed).and_return nil
     @feed.update_feed.should be_false
   end
   
   describe "successfully fetching a feed" do
     before do
-      @feed.expects(:fetch_feed).returns "data1"
-      @feed.expects(:parse_feed_data).with("data1").returns "data"
+      @feed.should_receive(:fetch_feed).and_return "data1"
+      @feed.should_receive(:parse_feed_data).with("data1").and_return "data"
     end
     
     it "stored the feed data as yaml" do
@@ -154,7 +154,7 @@ end
 
 describe :fetch_feed do
   before do
-    ActsAsFeed::FeedClient.any_instance.expects(:fetch).with('http://hello',Feed.feed_timeout).returns "data"
+    ActsAsFeed::FeedClient.should_receive(:fetch).with('http://hello',Feed.feed_timeout).and_return "data"
   end
   
   it "calls FeedClient.fetch" do
@@ -168,9 +168,13 @@ end
 
 
 describe :parse_feed_data do
+  before do
+    @feed = Feed.new
+  end
+
   def parsed
-    data = stub(:channel=>stub(:title=>'the title',:description=>'the description'),:entries=>[stub(:title=>'entry 1',:urls=>['url 1'],:content=>"descr"*100,:date_published=>Time.now)])
-    Feed.new.send(:parse_feed_data,data)
+    data = mock(:channel=>mock(:title=>'the title',:description=>'the description'),:entries=>[mock(:title=>'entry 1',:urls=>['url 1'],:content=>"descr"*100,:date_published=>Time.now)])
+    @feed.send(:parse_feed_data,data)
   end
   
   it "reads the title" do
@@ -182,7 +186,7 @@ describe :parse_feed_data do
   end
   
   it "reads entries" do
-    Feed.any_instance.expects(:parse_feed_entry).returns 'xxx'
+    @feed.should_receive(:parse_feed_entry).and_return 'xxx'
     parsed[:entries].should == ['xxx']
   end
 end
@@ -190,7 +194,7 @@ end
 
 describe :parse_feed_entry do
   def parsed
-    entry = stub(:title=>'entry 1',:urls=>['url 1'],:content=>"descr<a>xx</a>"*100,:date_published=>Time.now)
+    entry = mock(:title=>'entry 1',:urls=>['url 1'],:content=>"descr<a>xx</a>"*100,:date_published=>Time.now)
     Feed.new.send(:parse_feed_entry,entry)
   end
   

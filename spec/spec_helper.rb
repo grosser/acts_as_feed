@@ -1,7 +1,6 @@
 # ---- requirements
 require 'rubygems'
 require 'spec'
-require 'mocha'
 
 #strip_tags
 require 'action_pack'
