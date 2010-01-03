@@ -1,4 +1,5 @@
 require 'rss-client'
+require 'active_record'
 
 module ActsAsFeed
   MAX_FEED_DESCRIPTION_LENGTH = 200
@@ -108,3 +109,5 @@ module ActsAsFeed
     end
   end
 end
+
+ActiveRecord::Base.send :include, ActsAsFeed

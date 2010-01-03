@@ -13,7 +13,9 @@ Features
 
 INSTALL
 =======
-
+As gem
+    sudo gem install acts_as_feed
+OR as Rails plugin:
     sudo gem install rss-client
     script/plugin install git://github.com/grosser/acts_as_feed.git
 
@@ -24,7 +26,7 @@ Table with (see: MIGRATION):
     feed_updated_at : timestamp
     feed_data : text
 
-    #if you want to extend use a polymorphic feed
+    #if you want to use a polymorphic feed
     covered_id : integer
     covered_type : string
 
