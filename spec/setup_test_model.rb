@@ -1,8 +1,10 @@
-require 'rubygems'
-require 'active_record'
-require 'active_record/fixtures'
+# connect
+ActiveRecord::Base.establish_connection(
+  :adapter => "sqlite3",
+  :database => ":memory:"
+)
 
-#create model table
+# create table
 ActiveRecord::Schema.define(:version => 1) do
   create_table "feeds" do |t|
     t.string    "feed_url"
@@ -12,7 +14,7 @@ ActiveRecord::Schema.define(:version => 1) do
   end
 end
 
-#create model
+# create model
 class Feed < ActiveRecord::Base
   acts_as_feed
 end
